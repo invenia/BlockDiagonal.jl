@@ -1,20 +1,20 @@
 # Core functionality for the `BlockDiagonal` type
 
 """
-    BlockDiagonal{T, V<:AbstractMatrix{T}} <: AbstractMatrix{T}
+    BlockDiagonal{T, V<:AbstractMatrix{T}, AV<:AbstractVector{V}} <: AbstractMatrix{T}
 
 A matrix with matrices on the diagonal, and zeros off the diagonal.
 """
-struct BlockDiagonal{T, V<:AbstractMatrix{T}} <: AbstractMatrix{T}
-    blocks::Vector{V}
+struct BlockDiagonal{T, V<:AbstractMatrix{T}, AV<:AbstractVector{V}} <: AbstractMatrix{T}
+    blocks::AV
 
-    function BlockDiagonal{T, V}(blocks::Vector{V}) where {T, V<:AbstractMatrix{T}}
-        return new{T, V}(blocks)
+    function BlockDiagonal{T, V, AV}(blocks::AV) where {T, V<:AbstractMatrix{T}, AV<:AbstractVector{V}}
+        return new{T, V, AV}(blocks)
     end
 end
 
-function BlockDiagonal(blocks::Vector{V}) where {T, V<:AbstractMatrix{T}}
-    return BlockDiagonal{T, V}(blocks)
+function BlockDiagonal(blocks::AV) where {T, V<:AbstractMatrix{T}, AV<:AbstractVector{V}}
+    return BlockDiagonal{T, V, AV}(blocks)
 end
 
 BlockDiagonal(B::BlockDiagonal) = B
@@ -22,7 +22,7 @@ BlockDiagonal(B::BlockDiagonal) = B
 is_square(A::AbstractMatrix) = size(A, 1) == size(A, 2)
 
 """
-    blocks(B::BlockDiagonal{T, V}) -> Vector{V}
+    blocks(B::BlockDiagonal{T, V, AV}) -> AV
 
 Return the on-diagonal blocks of B.
 """
